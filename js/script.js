@@ -30,6 +30,7 @@ $(document).ready(
     $('#button-todo').click(
       function(){
         var cosaDaFare = $('#todo').val();
+        // NOTE: aggiungo al db
         $.ajax(
           {
             url:'http://157.230.17.132:3004/todos/',
@@ -44,6 +45,7 @@ $(document).ready(
             }
           }
         );
+        // NOTE: aggiungo in html
         var source = document.getElementById("entry-template").innerHTML;
         var template = Handlebars.compile(source);
         var context = {
@@ -61,6 +63,7 @@ $(document).ready(
       function(){
         var id = $(this).parents('li').attr('data-id');
 
+        // NOTE: elimino dal db
         $.ajax(
           {
             url:'http://157.230.17.132:3004/todos/' + id,
@@ -73,7 +76,7 @@ $(document).ready(
             }
           }
         );
-
+        // NOTE: elimino da pagina html
         $(this).parents('li').remove();
 
       }
