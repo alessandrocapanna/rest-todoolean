@@ -1,30 +1,7 @@
 $(document).ready(
   function(){
-    // NOTE: visualizzare lista
-    $.ajax(
-      {
-        url:'http://157.230.17.132:3004/todos/',
-        method: 'GET',
-
-        success:function(data){
-
-          for (var i = 0; i < data.length; i++) {
-            var source = document.getElementById("entry-template").innerHTML;
-            var template = Handlebars.compile(source);
-            var context = {
-              testo:data[i].text,
-              id:data[i].id
-            };
-            var html = template(context);
-            $('ul#todo-list').append(html)
-          }
-        },
-        error: function(){
-          alert('errore durante il caricamento')
-        }
-      }
-    );
-
+    // NOTE: visualizzare contenuti iniziali
+    printTodo();
 
     // NOTE: aggiungere cose alla lista
     $('#button-todo').click(
@@ -39,24 +16,19 @@ $(document).ready(
               text:cosaDaFare
             },
             success:function(data){
+
+              printTodo();
+
+              // resetto il val
+              $('#todo').val('');
             },
             error: function(){
               alert('errore durante la l\'aggiunta')
             }
           }
         );
-        // NOTE: aggiungo in html
-        var source = document.getElementById("entry-template").innerHTML;
-        var template = Handlebars.compile(source);
-        var context = {
-          testo:cosaDaFare
-        };
-        var html = template(context);
-        $('ul#todo-list').append(html)
-        // NOTE: resetto val input
-        $('#todo').val('');
       }
-    );
+    );//fine ggiungi
 
     // NOTE: per eliminare
     $(document).on('click', '#button-delete',
@@ -70,18 +42,44 @@ $(document).ready(
             method: 'DELETE',
 
             success:function(data){
+              printTodo();
+              $(this).parents('li').remove();
             },
             error: function(){
-              alert('errore durante la cancellazione')
+              alert('errore durante la cancellazione');
             }
           }
         );
-        // NOTE: elimino da pagina html
-        $(this).parents('li').remove();
-
       }
-    );
+    );//fine delete
 
+    // NOTE: funzione per stampare
+    function printTodo(){
+      $('ul#todo-list *').remove();
+      $.ajax(
+        {
+          url:'http://157.230.17.132:3004/todos/',
+          method: 'GET',
+
+          success:function(data){
+
+            for (var i = 0; i < data.length; i++) {
+              var source = document.getElementById("entry-template").innerHTML;
+              var template = Handlebars.compile(source);
+              var context = {
+                testo:data[i].text,
+                id:data[i].id
+              };
+              var html = template(context);
+              $('ul#todo-list').append(html)
+            }
+          },
+          error: function(){
+            alert('errore durante il caricamento')
+          }
+        }
+      );
+    }//fine printTodo
 
   }
-);
+);//fine ready
